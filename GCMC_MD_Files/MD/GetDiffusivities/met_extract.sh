@@ -9,6 +9,7 @@
 
 echo "Mols,Temp,Diff_msd,Diff_plot,Diff_fit" > Met_AllResults.csv
 
+ls | grep 'met' > list.txt
 for i in $(cat list.txt)
 do
 cd $i
