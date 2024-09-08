@@ -27,21 +27,11 @@ cp -r ../../PyLATStuff/* .
 sh met_analyze.sh
 
 grep 'ch4' ch4.json | head -n 1 | awk -F ' ' '{print $2}' | sed 's/.$//' > ch4values.txt
-cp ../../met_plot.py .
-
-sed -i 's/AAA/'$rep'/' met_plot.py
-sed -i 's/BBB/'$tempp'/' met_plot.py
-
-##-----------------running the python file-----------------------------##
-python3 met_plot.py > met_values.txt
-
-cat met_values.txt >> ch4values.txt
 
 aa=$(head -n 1 ch4values.txt)
-bb=$(head -n 2 ch4values.txt | tail -n 1)
-cc=$(tail -n 1 ch4values.txt)
 
-echo "$i,$tempp,$aa,$bb,$cc" >> ../../Met_AllResults.csv
+
+echo "$i,$tempp,$aa" >> ../../Met_AllResults.csv
 
 #rm ch4values.txt met_values.txt
 cd ../../
