@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ls | grep 'met' > tmp.txt
+
 for i in $(cat tmp.txt)
 do
 cd $i
