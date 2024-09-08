@@ -23,21 +23,9 @@ cp -r ../../PyLATStuff/* .
 sh car_analyze.sh
 
 grep 'co2' co2.json | head -n 1 | awk -F ' ' '{print $2}' | sed 's/.$//' > co2values.txt
-cp ../../car_plot.py .
-
-sed -i 's/AAA/'$rep'/' car_plot.py
-sed -i 's/BBB/'$tempp'/' car_plot.py
-
-##-----------------running the python file-----------------------------##
-python3 car_plot.py > car_values.txt
-
-cat car_values.txt >> co2values.txt
 
 aa=$(head -n 1 co2values.txt)
-bb=$(head -n 2 co2values.txt | tail -n 1)
-cc=$(tail -n 1 co2values.txt)
-
-echo "$i,$tempp,$aa,$bb,$cc" >> ../../Car_AllResults.csv
+echo "$i,$tempp,$aa" >> ../../Car_AllResults.csv
 
 cd ../../
 done
