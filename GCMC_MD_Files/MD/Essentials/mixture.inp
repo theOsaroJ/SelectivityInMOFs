@@ -1,0 +1,18 @@
+#
+# A box with methane and co2
+#
+
+tolerance 2.0
+filetype xyz
+output molecules.xyz
+
+structure methane.xyz
+  number methane_mols
+  inside box 0. 0. 0. 26.343 26.343 26.343
+end structure
+
+structure co2.xyz
+  number co2_mols
+  inside box 0. 0. 0. 26.343 26.343 26.343
+end structure
+

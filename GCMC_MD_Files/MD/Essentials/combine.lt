@@ -1,0 +1,13 @@
+import "molecules.lt"
+import "CuBTC.lt"
+
+# Periodic boundary conditions:
+cl = new mol
+cl1= new mof
+
+write_once("Data Boundary") {
+   0.0  26.343000  xlo xhi
+   0.0  26.343000  ylo yhi
+   0.0  26.343000  zlo zhi
+}
+

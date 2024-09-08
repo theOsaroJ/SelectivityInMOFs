@@ -1,0 +1,20 @@
+Masses
+
+1 12.010700 # C
+2 15.999400 # O
+3 16.043000 # _me
+
+Pair Coeffs
+
+1  0.156989    2.8   # C
+2  0.053655    3.050 # O
+3  0.29411     3.730 # _me
+
+Bond Coeffs
+
+1  99 1.160 # O=C
+
+Angle Coeffs
+
+1  harmonic 99 180 # O=C=O
+

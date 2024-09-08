@@ -1,0 +1,93 @@
+# User input information
+variable        NAME index mol               # The prefix of the log and LAMMPS dump file names
+log             ${NAME}.log
+variable        infile index restart.data   # The name of the LAMMPS input data file
+variable        mytemp index SSS     # The simulation temperature
+
+variable        xyzfreq index 5000           # The output frequency of coordinate information
+variable        thermofreq index 5000        # The output frequency of property information
+variable        simlength index 10000000 # Simulation run length  (in timesteps)
+
+variable        restartfreq index 5000       # The output frequency of restart files
+
+# Properties to output
+variable        density equal density
+variable        temp equal temp
+variable        press equal press
+variable        ke equal ke
+variable        pe equal pe
+variable        etotal equal etotal
+variable        enthalpy equal enthalpy
+
+# Simulation settings
+# the following information is saved to restart files
+units           real
+atom_style      full
+boundary        p p p
+pair_style      lj/cut 12
+pair_modify     tail yes
+pair_modify     mix arithmetic
+#special_bonds   lj/coul 0.0 0.0 0.5
+
+bond_style      harmonic
+angle_style     hybrid cosine/periodic fourier harmonic
+dihedral_style  harmonic
+improper_style  fourier
+
+include "combine.in.init"
+read_data       ${infile}
+include "combine.in.settings"
+
+neighbor        0.5 bin
+neigh_modify    delay 0 every 1 check yes page 1000000 one 20000
+timestep        1
+
+#------------------------------ relax geometry ---------------------------#
+min_style cg
+minimize         1.0e-4 1.0e-4 10000 100000
+
+# --------------------- simulation/thermostat details ---------------------#
+timestep         1
+
+## grouping atoms
+group co2molecs type 1:2
+group metmolecs type 3
+group molecs type 1:3
+group fram type 4:7
+
+## create velocity profile
+velocity        all create  ${mytemp} 314159265 units box
+velocity        all zero linear units box
+
+compute         msd molecs msd com yes
+thermo_style    custom step vol temp press ke pe etotal enthalpy evdwl ecoul epair ebond eangle edihed eimp emol elong etail lx ly lz xy xz yz density c_msd[4]
+################
+# NVT PRODUCTION
+################
+
+#dump            dumpmolecs molecs custom ${xyzfreq} ${NAME}.molecs.lammpstrj id type x y z mol
+dump            dumpco2 co2molecs custom ${xyzfreq} ${NAME}.co2molecs.lammpstrj id type x y z mol
+dump            dumpmet metmolecs custom ${xyzfreq} ${NAME}.metmolecs.lammpstrj id type x y z mol
+#dump            dumpmof fram custom ${xyzfreq} ${NAME}.fram.lammpstrj id type x y z mol
+dump            dumpall all custom ${xyzfreq} ${NAME}.all.lammpstrj id type x y z mol
+
+#dump            dumpxyz all xyz ${xyzfreq} ${NAME}.npt.xyz
+#dump_modify     dumpxyz element N
+fix             aveprop molecs ave/time 1 1 ${thermofreq} v_density v_temp v_press v_ke v_pe v_etotal v_enthalpy c_msd[4] file properties.nvt.dat
+thermo          ${thermofreq}
+
+fix             NVT molecs nvt temp ${mytemp} ${mytemp} 100.0
+compute 	rnn molecs msd com yes 
+restart         ${restartfreq} restart.${NAME}.1 restart.${NAME}.2
+
+#dump            1 all dcd 10000 out1.dcd
+#dump_modify     1 unwrap no
+
+run             ${simlength}
+
+##################################
+# WRITE LAST DATA DATAFILE TO DISK
+##################################
+
+write_restart   restart.${NAME}
+write_data      restart.data
