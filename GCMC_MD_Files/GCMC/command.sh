@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for p in $(cat tmp.csv)
+for p in $(cat pressures.csv)
 do
 mkdir $p
 cd $p
