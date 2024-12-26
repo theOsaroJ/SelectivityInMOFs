@@ -6,7 +6,7 @@ variable        mytemp index SSS     # The simulation temperature
 
 variable        xyzfreq index 5000           # The output frequency of coordinate information
 variable        thermofreq index 5000        # The output frequency of property information
-variable        simlength index 5000000 # Simulation run length  (in timesteps)
+variable        simlength index 20000000 # Simulation run length  (in timesteps)
 
 variable        restartfreq index 5000       # The output frequency of restart files
 
